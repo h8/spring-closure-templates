@@ -21,6 +21,23 @@
 	<bean id="closureTemplateViewResolver"
 		class="com.tomakehurst.springclosuretemplates.web.mvc.ClosureTemplateViewResolver">
 		<property name="cache" value="false" />
+        <property name="commonInjectedDataProvider">
+            <bean class="com.tomakehurst.springclosuretemplates.web.mvc.inject.ChainDataProvider">
+                <property name="providers">
+                    <list>
+                        <bean class="com.tomakehurst.springclosuretemplates.web.mvc.inject.ContextPathDataProvider" />
+                        <bean class="com.tomakehurst.springclosuretemplates.web.mvc.inject.ValueMapDataProvider" >
+                            <property name="values">
+                                <map>
+                                    <entry key="globalMessage1" value="This is first global injected message for all templates." />
+                                    <entry key="globalMessage2" value="Another global message." />
+                                </map>
+                            </property>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
 	</bean>
 
 	<bean

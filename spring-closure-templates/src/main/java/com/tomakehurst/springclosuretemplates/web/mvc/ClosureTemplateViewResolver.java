@@ -2,6 +2,7 @@ package com.tomakehurst.springclosuretemplates.web.mvc;
 
 import com.google.template.soy.SoyFileSet;
 import com.google.template.soy.tofu.SoyTofu;
+import com.tomakehurst.springclosuretemplates.web.mvc.inject.CommonInjectedDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
@@ -16,6 +17,8 @@ public class ClosureTemplateViewResolver extends AbstractTemplateViewResolver {
 
 	@Autowired
 	private ClosureTemplateConfig closureTemplateConfig;
+
+    private CommonInjectedDataProvider commonInjectedDataProvider;
 
 	private SoyTofu compiledTemplates;
 
@@ -61,6 +64,10 @@ public class ClosureTemplateViewResolver extends AbstractTemplateViewResolver {
 		this.closureTemplateConfig = closureTemplateConfig;
 	}
 
+    public void setCommonInjectedDataProvider(CommonInjectedDataProvider commonInjectedDataProvider) {
+        this.commonInjectedDataProvider = commonInjectedDataProvider;
+    }
+
 	@Override
 	protected Class<?> getViewClass() {
 		return ClosureTemplateView.class;
@@ -70,6 +77,7 @@ public class ClosureTemplateViewResolver extends AbstractTemplateViewResolver {
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 		ClosureTemplateView view = (ClosureTemplateView) super.buildView(viewName);
 		view.setTemplateName(viewName);
+        view.setCommonInjectedDataProvider(commonInjectedDataProvider);
 
 		if (isCache()) {
 			view.setCompiledTemplates(compiledTemplates);
